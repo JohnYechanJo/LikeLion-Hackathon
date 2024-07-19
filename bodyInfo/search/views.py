@@ -49,7 +49,9 @@ def search(request):
                     link = items[item_index]['link']
                     address = re.sub(remove_tag, '', items[item_index]['address'])
                     web_df.loc[idx] = [title, link, address]
-                    SearchResult.objects.create(title=title, link=link, address=address)
+                    if not SearchResult.objects.filter(link=link).exists():
+                            SearchResult.objects.create(title=title, link=link, address=address)
+
                     idx += 1
             else:
                 return HttpResponse(f"Error Code: {rescode}", status=rescode)
