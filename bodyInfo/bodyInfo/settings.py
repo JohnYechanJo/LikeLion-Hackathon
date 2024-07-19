@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "bodyCalculate",
     "search.apps.SearchConfig",
+    "map.apps.MapConfig",
 ]
 
 MIDDLEWARE = [
