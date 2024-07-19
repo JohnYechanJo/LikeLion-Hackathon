@@ -18,3 +18,11 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.gender} {self.age_group} - {self.height} cm, {self.weight} kg, {self.exercise_frequency} times/week"
+    
+class SearchResult(models.Model):
+    title = models.CharField(max_length=255)
+    link = models.URLField()
+    address = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title

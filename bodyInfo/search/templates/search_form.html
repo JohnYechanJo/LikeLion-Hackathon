@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>검색</title>
+</head>
+<body>
+    <h1>검색</h1>
+    <form method="POST" action="{% url 'search' %}">
+        {% csrf_token %}
+        <label for="query">검색 질의:</label>
+        <input type="text" id="query" name="query" required>
+        <button type="submit">검색</button>
+    </form>
+</body>
+</html>
