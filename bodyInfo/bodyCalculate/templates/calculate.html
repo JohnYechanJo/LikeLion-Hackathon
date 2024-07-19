@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculate Metrics</title>
+</head>
+<body>
+    <h1>Calculate Your Metrics</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Calculate</button>
+    </form>
+</body>
+</html>

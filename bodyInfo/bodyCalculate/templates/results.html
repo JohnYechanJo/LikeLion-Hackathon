@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+</head>
+<body>
+    <h1>Calculation Results</h1>
+    <p>Body Fat Percentage: {{ body_fat_percentage }}%</p>
+    <p>Basal Metabolic Rate (BMR): {{ BMR }} kcal/day</p>
+    <p>Total Daily Energy Expenditure (TDEE): {{ TDEE }} kcal/day</p>
+    <a href="{% url 'calculate_metrics' %}">Calculate Again</a>
+</body>
+</html>
