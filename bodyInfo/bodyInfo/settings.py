@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "bodyCalculate",
-    "search.apps.SearchConfig",
     "map.apps.MapConfig",
 ]
 
