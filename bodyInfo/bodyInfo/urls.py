@@ -17,8 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from map import views as m
+from bodyCalculate import views as cal
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', include('bodyCalculate.urls')),
+    path('bodyCalculate/', cal.calculate_metrics, name="calculate_metrics"),
+    path('mapview/', m.mapview, name="mapview"),
 ]
