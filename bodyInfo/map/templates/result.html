@@ -5,7 +5,7 @@
     <title>현 위치 기반 건강식 추천</title>
 </head>
 <body>
-
+<h2 style="text-align:center;">키워드: 건강식</h2>
 <div id="map" style="width:100%;height:350px;"></div>
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=097f8753a3992b85547c8e784d4afd28&libraries=services"></script>
@@ -71,7 +71,7 @@ function searchNearbyRestaurants(lat, lon) {
     var ps = new kakao.maps.services.Places(); 
 
     // 장소 검색 객체를 통해 키워드로 장소 검색을 요청합니다
-    ps.keywordSearch('건강식', function(data, status, pagination) {
+    ps.keywordSearch('건강식', function(data, status, pagination) { //키워드 변경을 통해 식당 검색 변경 가능.
         if (status === kakao.maps.services.Status.OK) {
             // 검색된 장소 위치를 기준으로 마커를 지도에 표시합니다
             for (var i = 0; i < data.length; i++) {
