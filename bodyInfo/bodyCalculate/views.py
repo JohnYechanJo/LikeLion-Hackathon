@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from .forms import UserProfileForm
 
+def home(request):
+    return render(request, 'home.html')
+
 def calculate_metrics(request):
     if request.method == 'POST':
         form = UserProfileForm(request.POST)

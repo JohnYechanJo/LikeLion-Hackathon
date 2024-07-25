@@ -17,8 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from bodyCalculate.views import home
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', include('bodyCalculate.urls')),
+    path('', home, name='home'),    
+    path('calculation/', include('bodyCalculate.urls')),
+    path('account/', include('account.urls')),
 ]
