@@ -18,9 +18,9 @@
 
 <div id="category" style="margin-top: 10px;">
     <h2>카테고리</h2>
-    <form method="get">
+    <form method="post">
         {% csrf_token %}
-        <button type="submit" name="샐러드" formaction="{% url 'map_salad' %}">샐러드</button>
+        <button type="submit" name="샐러드" style="background-color: red;">샐러드</button>
         <button type="submit" name="포케">포케</button>
     </form>
 </div>
@@ -57,6 +57,7 @@ if (navigator.geolocation) {
         
         currentLocation = new kakao.maps.LatLng(lat, lon); // 현재 위치 저장
         
+        searchNearbyPlaces("샐러드")
         // 마커를 표시합니다
         displayMarker(currentLocation);
             

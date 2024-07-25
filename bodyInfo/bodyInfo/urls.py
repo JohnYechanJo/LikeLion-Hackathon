@@ -24,4 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('bodyCalculate/', cal.calculate_metrics, name="calculate_metrics"),
     path('mapview/', m.mapview, name="mapview"),
+    path('mapview/list/', m.re_list, name="re_list"),
+    path('mapview/salad', m.map_salad, name="map_salad"),
+    path('test/', m.test, name="test"),
 ]

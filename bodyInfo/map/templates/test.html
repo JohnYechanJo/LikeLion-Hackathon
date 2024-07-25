@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>버튼 예제</title>
+</head>
+<body>
+    <h1>버튼 클릭 예제</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="button1">버튼 1</button>
+        <button type="submit" name="button2">버튼 2</button>
+    </form>
+    
+    {% if result %}
+        <p>{{ result }}</p>
+    {% endif %}
+</body>
+</html>

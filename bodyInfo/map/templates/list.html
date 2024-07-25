@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>주변 식당 리스트</title>
+</head>
+<body>
+
+<div id="restaurant-list" style="margin-top: 20px;">
+    <h2>가까운 식당 목록</h2>
+    <ul id="list"></ul>
+</div>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=097f8753a3992b85547c8e784d4afd28&libraries=services"></script>
+<script>
+// HTML5의 geolocation으로 사용할 수 있는지 확인합니다 
+if (navigator.geolocation) {
+    
+    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+    navigator.geolocation.getCurrentPosition(function(position) {
+        
+        var lat = position.coords.latitude, // 위도
+            lon = position.coords.longitude; // 경도
+        
+        // 현재 위치를 기반으로 식당 검색
+        searchNearbyRestaurants(lat, lon);
+            
+      });
+    
+} else { // HTML5의 GeoLocation을 사용할 수 없을때
+    alert('Geolocation을 사용할 수 없습니다.');
+}
+
+// 현재 위치를 기반으로 식당 검색 함수
+function searchNearbyRestaurants(lat, lon) {
+    var ps = new kakao.maps.services.Places(); 
+    var keword = "{{ name|escapejs }}";
+    // 장소 검색 객체를 통해 키워드로 장소 검색을 요청합니다
+    ps.keywordSearch(keword, function(data, status, pagination) {
+        if (status === kakao.maps.services.Status.OK) {
+            var listEl = document.getElementById('list');
+            listEl.innerHTML = ''; // 기존 목록을 초기화합니다
+
+            // 검색된 장소 위치를 기준으로 목록에 표시합니다c
+            for (var i = 0; i < data.length; i++) {
+                addRestaurantToList(data[i]);
+            }
+        } 
+    }, {location: new kakao.maps.LatLng(lat, lon)});
+}
+
+// 식당 정보를 목록에 추가하는 함수
+function addRestaurantToList(place) {
+    var listEl = document.getElementById('list');
+    var itemEl = document.createElement('li');
+    var content = `<b>이름:</b> ${place.place_name}<br>
+                   <b>주소:</b> ${place.road_address_name || place.address_name}<br>
+                   <b>전화번호:</b> ${place.phone}<br>
+                   <b>상세정보:</b> <a href="${place.place_url}" target="_blank">바로가기</a>`;
+    itemEl.innerHTML = content;
+    listEl.appendChild(itemEl);
+}
+</script>
+
+<a href="{% url 'mapview' %}">지도로 돌아가기</a>
+</body>
+</html>
