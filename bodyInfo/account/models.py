@@ -12,6 +12,8 @@ class Profile(models.Model):
     weight = models.DecimalField(max_digits=5, decimal_places=2)
     exercise_frequency = models.IntegerField()
 
+    def __str__(self):
+        return self.user.username
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:

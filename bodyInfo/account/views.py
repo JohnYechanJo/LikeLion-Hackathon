@@ -26,18 +26,28 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-
-            # 사용자 저장
             user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])  # 패스워드 암호화
+            user.set_password(form.cleaned_data['password'])
             user.save()
-            
-            # 프로필 생성 및 저장
-            Profile.objects.create(user=user)
-            
-            # 로그인 후 리다이렉트
-            login(request, user)
-            return redirect('home')
+
+            # 추가 필드(Profile 모델) 저장
+            profile = Profile(
+                user=user,
+                phone_number=form.cleaned_data['phone_number'],
+                gender=form.cleaned_data['gender'],
+                age=form.cleaned_data['age'],
+                height=form.cleaned_data['height'],
+                weight=form.cleaned_data['weight'],
+                exercise_frequency=form.cleaned_data['exercise_frequency']
+            )
+            profile.save()
+
+            # 사용자 인증 및 로그인
+            new_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            if new_user is not None:
+                login(request, new_user)
+                return redirect('home')
     else:
         form = SignUpForm()
+
     return render(request, 'signup.html', {'form': form})
