@@ -35,7 +35,7 @@ class SignUpForm(forms.ModelForm):
             user.save()
         return user
     
-    def clean_id(self):
+    def clean_username(self):
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
             raise ValidationError("중복된 아이디입니다.")
@@ -59,3 +59,4 @@ class SignUpForm(forms.ModelForm):
         confirm_password = cleaned_data.get("confirm_password")
         if password and confirm_password and password != confirm_password:
             raise ValidationError("비밀번호가 일치하지 않습니다.")
+        return cleaned_data
