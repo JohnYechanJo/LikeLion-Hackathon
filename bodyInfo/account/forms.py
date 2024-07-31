@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Profile
+from django.core.validators import RegexValidator
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label='아이디', widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -24,6 +25,9 @@ class SignUpFormStep1(forms.ModelForm):
     
 
 class SignUpFormStep2(forms.ModelForm):
+    phone_regex = RegexValidator(regex=r'^\d{10,15}$', message="전화번호는 10~15자리 숫자여야 합니다.")
+    phone_number = forms.CharField(validators=[phone_regex], max_length=15, required=True)
+
     class Meta:
         model = Profile
         fields = ['nickname', 'age', 'email', 'phone_number']

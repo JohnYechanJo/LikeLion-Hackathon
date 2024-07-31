@@ -5,10 +5,27 @@
 </head>
 <body>
     <h1>Sign Up</h1>
-    <form action = "{% url 'signup_step2' %}" method="POST">
+    <form action="{% url 'signup_step2' %}" method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Next</button>
+    
+        닉네임: <input type="text" name="nickname" value="{{ form.nickname.value }}"> <br/>
+        나이: <input type="number" name="age" value="{{ form.age.value }}"> <br/>
+
+        {% if form.email.errors %}
+            <div style="color: red;">
+                {{ form.email.errors }}
+            </div>
+        {% endif %}
+        이메일: <input type="email" name="email" value="{{ form.email.value }}"> <br/>
+        
+        {% if form.phone_number.errors %}
+            <div style="color: red;">
+                {{ form.phone_number.errors }}
+            </div>
+        {% endif %}
+        전화번호: <input type="text" name="phone_number" value="{{ form.phone_number.value }}"> <br/>
+        
+        <button type="submit">다음</button>
     </form>
 </body>
 </html>
