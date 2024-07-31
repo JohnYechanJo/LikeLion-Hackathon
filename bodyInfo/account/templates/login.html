@@ -8,11 +8,27 @@
 </head>
 <body>
     <h2>Login</h2>
-    <form action = "{% url 'user_login' %}" method="POST">
+    <form action="{% url 'user_login' %}" method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
+        {% if form.non_field_errors %}
+            <div style="color: red;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+        id: <input type="text" name="username" value="{{ form.username.value }}"> <br/>
+        {% if form.username.errors %}
+            <div style="color: red;">
+                {{ form.username.errors }}
+            </div>
+        {% endif %}
+        pw: <input type="password" name="password"> <br/>
+        {% if form.password.errors %}
+            <div style="color: red;">
+                {{ form.password.errors }}
+            </div>
+        {% endif %}
+        <button type="submit">로그인</button>
     </form>
-    <a href="{% url 'home' %}"><button>홈으로</button></a>
+    <a href="{% url 'signup_step1' %}"><button>회원가입</button></a>
 </body>
 </html>

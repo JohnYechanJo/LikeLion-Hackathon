@@ -5,19 +5,7 @@
 </head>
 <body>
     <h1>Home</h1>
-    {% if user.is_authenticated %}
-        <p>안녕하세요, {{ user.username }} 님! </p>
-        <a href = "{% url 'user_logout' %}">로그아웃</a>
-    {% else %}
-        <form action = "{% url 'user_login' %}" method="POST">
-            {% csrf_token %}
-            id: <input type="text" name="username"> <br/>
-            pw: <input type="password" name="password"> <br/>
-            <button type="submit">Login</button>
-        </form>
 
-        <a href = "{% url 'signup_step1' %}">회원가입</a>
-    {% endif %}
-    </div>
+    <a href = "{% url 'mycalorie' %}">내 정보</a>
 </body>
 </html>

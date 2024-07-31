@@ -16,7 +16,7 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('home')
+            return render(request, 'mycalorie.html')
     else:
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
@@ -106,3 +106,6 @@ def signup_step4(request):
         initial_data = request.session.get('signup_data', {})
         form = SignUpFormStep4(initial=initial_data)
     return render(request, 'signup4.html', {'form': form})
+
+def mycalorie(request):
+    return render(request, 'mycalorie.html')

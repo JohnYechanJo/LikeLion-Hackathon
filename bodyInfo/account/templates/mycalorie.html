@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Calorie</title>
+</head>
+<body style="text-align: center;">
+    <h1>My Calorie</h1>
+    <div style="text-align: right;">
+    {% if user.is_authenticated %}
+        <a href = "{% url 'user_logout' %}">로그아웃</a>
+        <a href = "{% url 'home' %}">뒤로 가기</a>
+        <div style="text-align: center;">
+            <p> 오늘의 칼로리 </p>
+        </div>
+    {% else %}
+        <p>로그인 후 사용해 주세요</p>
+        <a href = "{% url 'user_login' %}">로그인 하러 가기</a>
+    {% endif %}
+</body>
+</html>
