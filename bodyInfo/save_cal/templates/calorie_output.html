@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>칼로리 결과</title>
+</head>
+<body>
+    <h1>칼로리 결과</h1>
+
+    <h2>기록</h2>
+    <ul>
+        {% for record in user_records %}
+            <li>{{ record.date }}: 햄버거 {{ record.total_hamberger }}, 피자 {{ record.total_pizza }}, 치킨 {{ record.total_chicken }}, 걷기 {{ record.total_walk }}, 달리기 {{ record.total_run }}, 웨이트 트레이닝 {{ record.total_weight_training }}</li>
+        {% empty %}
+            <li>기록이 없습니다.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'calorie_input' %}">다시 입력하기</a> <a href="{% url 'home' %}">  홈으로</a>
+</body>
+</html>

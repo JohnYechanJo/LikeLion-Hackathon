@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>칼로리 입력</title>
+</head>
+<body>
+    <h1>먹은 음식 및 운동 시간 기록</h1>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <h2>음식 선택</h2>
+        <label>햄버거: <input type="number" name="food_items[hamberger]" min="0" value="0"></label>
+        <label>피자: <input type="number" name="food_items[pizza]" min="0" value="0"></label>
+        <label>치킨: <input type="number" name="food_items[chicken]" min="0" value="0"></label>
+
+        <h2>운동 선택</h2>
+        <label>걷기: <input type="number" name="exercise_items[walk]" min="0" value="0"></label>
+        <label>달리기: <input type="number" name="exercise_items[run]" min="0" value="0"></label>
+        <label>웨이트 트레이닝: <input type="number" name="exercise_items[weight_training]" min="0" value="0"></label>
+
+        <button type="submit">제출</button>
+    </form>
+    <br><br><a href="{% url 'home' %}">홈으로</a>
+    <div class="message" id="message"></div>
+</body>
+</html>

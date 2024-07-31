@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 프로필</title>
+</head>
+<body>
+    <h1>사용자 프로필</h1>
+    <p><strong>사용자 이름:</strong> {{ user.username }}</p>
+    <p><strong>전화번호:</strong> {{ profile.phone_number }}</p>
+    <p><strong>성별:</strong> {{ profile.get_gender_display }}</p>
+    <p><strong>나이:</strong> {{ profile.age }}</p>
+    <p><strong>키:</strong> {{ profile.height }} cm</p>
+    <p><strong>몸무게:</strong> {{ profile.weight }} kg</p>
+    <p><strong>운동 빈도:</strong> {{ profile.exercise_frequency }} 회/주</p>
+    <br>
+    <br>
+    <p><strong>Body Fat Percentage:</strong> {{ body_fat_percentage }}%</p>
+    <p><strong>Basal Metabolic Rate (BMR):<strong> {{ BMR }} kcal/day</p>
+    <p><strong>Total Daily Energy Expenditure (TDEE):</strong> {{ TDEE }} kcal/day</p>
+
+    <a href="{% url 'home' %}">홈으로</a>
+</body>
+</html>

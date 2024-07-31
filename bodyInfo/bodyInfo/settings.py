@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "bodyCalculate.apps.BodycalculateConfig",
-    "map.apps.MapConfig"
+    "bodyCalculate",
+    "account",
+    "save_cal",
 ]
 
 MIDDLEWARE = [
