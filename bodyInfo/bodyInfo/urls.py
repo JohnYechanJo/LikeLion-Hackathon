@@ -24,4 +24,5 @@ urlpatterns = [
     path('', home, name='home'),    
     path('calculation/', include('bodyCalculate.urls')),
     path('account/', include('account.urls')),
+    path('save_cal/', include('save_cal.urls')),
 ]

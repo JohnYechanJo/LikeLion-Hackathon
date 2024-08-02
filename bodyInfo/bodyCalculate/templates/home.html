@@ -5,7 +5,22 @@
 </head>
 <body>
     <h1>Home</h1>
-
-    <a href = "{% url 'mycalorie' %}">내 정보</a>
+    {% if user.is_authenticated %}
+        <p>안녕하세요, {{ profile.nickname }} 님! </p>
+        <a href = "{% url 'user_logout' %}">로그아웃</a>
+        <br>
+        <br>
+        <a href = "{% url 'profile' %}">프로필 보기</a>
+    {% else %}
+        <form action = "{% url 'user_login' %}" method="POST">
+            {% csrf_token %}
+            id: <input type="text" name="username"> <br/>
+            pw: <input type="password" name="password"> <br/>
+            <button type="submit">Login</button>
+        </form>
+        <a href = "{% url 'signup_step1' %}">회원가입</a>
+        <a href = "{% url 'calculate_metrics' %}">  BMI 측정하기</a>
+    {% endif %}
+    </div>
 </body>
 </html>

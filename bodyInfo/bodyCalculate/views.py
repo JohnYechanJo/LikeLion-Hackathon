@@ -1,8 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from account.models import Profile
 from .forms import UserProfileForm
 
 def home(request):
-    return render(request, 'home.html')
+    user = request.user
+    
+    # 로그인하지 않은 경우, 로그인 페이지로 리다이렉트
+    if user.is_anonymous:
+        return redirect('user_login')
+
+    # 해당 사용자의 프로필 정보를 가져오기
+    profile = get_object_or_404(Profile, user=user)
+
+    # 템플릿에 전달할 컨텍스트 생성
+    context = {
+        'profile': profile,
+    }
+    
+    return render(request, 'home.html', context)
 
 def calculate_metrics(request):
     if request.method == 'POST':

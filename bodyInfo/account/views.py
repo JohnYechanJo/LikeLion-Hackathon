@@ -16,7 +16,7 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return render(request, 'mycalorie.html')
+            return redirect('profile')
     else:
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
@@ -98,7 +98,7 @@ def signup_step4(request):
                     )
                 login(request, user)
                 request.session.pop('signup_data', None)
-                return redirect('home')
+                return redirect('profile')
             except Exception as e:
                 # 로그 또는 오류 처리
                 form.add_error(None, str(e))

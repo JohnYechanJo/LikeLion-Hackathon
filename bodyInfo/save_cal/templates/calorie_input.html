@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>칼로리 입력</title>
+</head>
+<body>
+    <h1>먹은 음식 및 운동 시간 기록</h1>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <h2>음식 선택</h2>
+        <label><input type="checkbox" name="food_items" value="hamberger"> 햄버거</label><br>
+        <label><input type="checkbox" name="food_items" value="pizza"> 피자</label><br>
+        <label><input type="checkbox" name="food_items" value="chicken"> 치킨</label><br>
+
+        <h2>운동 선택</h2>
+        <label><input type="checkbox" name="exercise_items" value="walk"> 걷기</label><br>
+        <label><input type="checkbox" name="exercise_items" value="run"> 달리기</label><br>
+        <label><input type="checkbox" name="exercise_items" value="weight_training"> 웨이트 트레이닝</label><br>
+
+        <button type="submit">제출</button>
+    </form>
+    <a href="{% url 'profile' %}">  마이프로필</a>
+</body>
+</html>
