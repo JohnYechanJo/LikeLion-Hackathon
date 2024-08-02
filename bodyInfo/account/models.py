@@ -4,7 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=20, default='', null=False)
     email = models.EmailField(default='', null=False)
     phone_number = models.CharField(max_length=15)

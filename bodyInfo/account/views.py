@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
-
 from django.contrib.auth.models import User
 from .models import Profile
 from django.db import transaction
 from .forms import LoginForm, SignUpFormStep1, SignUpFormStep2, SignUpFormStep3, SignUpFormStep4
 from decimal import Decimal
+from django.contrib.auth.hashers import make_password
+
 
 def user_login(request):
     if request.method == 'GET':
@@ -84,21 +85,24 @@ def signup_step4(request):
             try:
                 user = User.objects.create_user(
                     username=data['username'],
-                    password=data['password']
+                    password=data['password'],  
                 )
-                if not Profile.objects.filter(user=user).exists():
-                    Profile.objects.create(
-                        user=user,
-                        phone_number=data['phone_number'],
-                        gender=data['gender'],
-                        age=data['age'],
-                        height=data['height'],
-                        weight=data['weight'],
-                        exercise_frequency=data['exercise_frequency']
-                    )
-                login(request, user)
-                request.session.pop('signup_data', None)
-                return redirect('home')
+                Profile.objects.create(
+                    user=user,
+                    nickname=data['nickname'],
+                    email=data['email'],
+                    phone_number=data['phone_number'],
+                    gender=data['gender'],
+                    age=data['age'],
+                    height=data['height'],
+                    weight=data['weight'],
+                    exercise_frequency=data['exercise_frequency']
+                )
+                new_user = authenticate(username=data['username'], password=data['password'])
+                if new_user is not None:
+                    login(request, new_user)
+                    request.session.pop('signup_data', None)
+                    return redirect('home')
             except Exception as e:
                 # 로그 또는 오류 처리
                 form.add_error(None, str(e))
