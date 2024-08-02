@@ -84,21 +84,24 @@ def signup_step4(request):
             try:
                 user = User.objects.create_user(
                     username=data['username'],
-                    password=data['password']
+                    password=data['password'],  
                 )
-                if not Profile.objects.filter(user=user).exists():
-                    Profile.objects.create(
-                        user=user,
-                        phone_number=data['phone_number'],
-                        gender=data['gender'],
-                        age=data['age'],
-                        height=data['height'],
-                        weight=data['weight'],
-                        exercise_frequency=data['exercise_frequency']
-                    )
-                login(request, user)
-                request.session.pop('signup_data', None)
-                return redirect('profile')
+                Profile.objects.create(
+                    user=user,
+                    nickname=data['nickname'],
+                    email=data['email'],
+                    phone_number=data['phone_number'],
+                    gender=data['gender'],
+                    age=data['age'],
+                    height=data['height'],
+                    weight=data['weight'],
+                    exercise_frequency=data['exercise_frequency']
+                )
+                new_user = authenticate(username=data['username'], password=data['password'])
+                if new_user is not None:
+                    login(request, new_user)
+                    request.session.pop('signup_data', None)
+                    return redirect('home')
             except Exception as e:
                 # 로그 또는 오류 처리
                 form.add_error(None, str(e))
@@ -106,6 +109,7 @@ def signup_step4(request):
         initial_data = request.session.get('signup_data', {})
         form = SignUpFormStep4(initial=initial_data)
     return render(request, 'signup4.html', {'form': form})
+
 
 def mycalorie(request):
     return render(request, 'mycalorie.html')
