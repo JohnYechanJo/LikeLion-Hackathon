@@ -20,14 +20,17 @@ def profile_view(request):
     exercise_frequency = profile.exercise_frequency
 
     # 체지방률 계산 (간단한 공식을 사용)
-    if gender == 'M':
-        body_fat_percentage = 1.20 * (weight / ((height / 100) ** 2)) + 0.23 * 25 - 16.2
-        if age_group < 19:
-            body_fat_percentage -= 4
+    if height == 0 or weight == 0:
+        body_fat_percentage = None
     else:
-        body_fat_percentage = 1.20 * (weight / ((height / 100) ** 2)) + 0.23 * 25 - 5.4
-        if age_group < 19:
-            body_fat_percentage -= 4
+        if gender == 'M':
+            body_fat_percentage = 1.20 * (weight / ((height / 100) ** 2)) + 0.23 * 25 - 16.2
+            if age_group < 19:
+                body_fat_percentage -= 4
+        else:
+            body_fat_percentage = 1.20 * (weight / ((height / 100) ** 2)) + 0.23 * 25 - 5.4
+            if age_group < 19:
+                body_fat_percentage -= 4
 
             # 기초 대사량(BMR) 계산
     if gender == 'M':

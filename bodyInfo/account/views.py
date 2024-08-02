@@ -1,63 +1,99 @@
-# views.py
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from rest_framework.decorators import action
 from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from django.contrib.auth.models import User
+from rest_framework import status, viewsets
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import redirect, render
+from rest_framework.decorators import action
+from .serializers import LoginSerializer, SignUpStep1Serializer, SignUpStep2Serializer, SignUpStep3Serializer, SignUpStep4Serializer
+from django.contrib.auth.models import User
 from .models import Profile
-from .serializers import UserSerializer, ProfileSerializer, SignUpStep1Serializer, SignUpStep2Serializer, SignUpStep3Serializer, SignUpStep4Serializer
 from decimal import Decimal
+from .forms import SignUpFormStep1, SignUpFormStep2, SignUpFormStep3, SignUpFormStep4
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        return render(request, 'login.html')
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            login(request, user)
+            return redirect('home')  # 로그인 성공 후 홈 페이지로 리디렉션
+        return render(request, 'login.html', {'form': serializer})
+    
+class LogoutView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        logout(request)
+        return redirect('user_login')  # 로그아웃 후 로그인 페이지로 리디렉션
+    def get(self, request):
+        logout(request)
+        return redirect('user_login')  # 로그아웃 후 로그인 페이지로 리디렉션
 
-class ProfileViewSet(viewsets.ModelViewSet):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
-
-class SignUpViewSet(viewsets.ViewSet):
+class SignUpStep1View(APIView):
     permission_classes = [AllowAny]
 
-    @action(detail=False, methods=['post'])
-    def step1(self, request):
-        serializer = SignUpStep1Serializer(data=request.data)
-        if serializer.is_valid():
-            request.session['signup_data'] = serializer.validated_data
-            return Response({'message': 'Proceed to step 2'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request):
+        form = SignUpFormStep1()
+        return render(request, 'signup1.html', {'form': form})
 
-    @action(detail=False, methods=['post'])
-    def step2(self, request):
-        serializer = SignUpStep2Serializer(data=request.data)
-        if serializer.is_valid():
-            request.session['signup_data'].update(serializer.validated_data)
-            return Response({'message': 'Proceed to step 3'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        form = SignUpFormStep1(request.POST)
+        if form.is_valid():
+            request.session['signup_data'] = form.cleaned_data
+            return redirect('signup_step2')
+        return render(request, 'signup1.html', {'form': form})
 
-    @action(detail=False, methods=['post'])
-    def step3(self, request):
-        serializer = SignUpStep3Serializer(data=request.data)
-        if serializer.is_valid():
+class SignUpStep2View(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        form = SignUpFormStep2()
+        return render(request, 'signup2.html', {'form': form})
+
+    def post(self, request):
+        form = SignUpFormStep2(request.POST)
+        if form.is_valid():
             data = request.session.get('signup_data', {})
-            cleaned_data = serializer.validated_data
+            data.update(form.cleaned_data)
+            request.session['signup_data'] = data
+            return redirect('signup_step3')
+        return render(request, 'signup2.html', {'form': form})
+
+class SignUpStep3View(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        form = SignUpFormStep3()
+        return render(request, 'signup3.html', {'form': form})
+
+    def post(self, request):
+        form = SignUpFormStep3(request.POST)
+        if form.is_valid():
+            data = request.session.get('signup_data', {})
+            cleaned_data = form.cleaned_data
             for key in ['height', 'weight']:
                 if key in cleaned_data:
                     cleaned_data[key] = str(cleaned_data[key])
             data.update(cleaned_data)
             request.session['signup_data'] = data
-            return Response({'message': 'Proceed to step 4'}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return redirect('signup_step4')
+        return render(request, 'signup3.html', {'form': form})
 
-    @action(detail=False, methods=['post'])
-    def step4(self, request):
-        serializer = SignUpStep4Serializer(data=request.data)
-        if serializer.is_valid():
+class SignUpStep4View(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        form = SignUpFormStep4()
+        return render(request, 'signup4.html', {'form': form})
+
+    def post(self, request):
+        form = SignUpFormStep4(request.POST)
+        if form.is_valid():
             data = request.session.get('signup_data', {})
-            data.update(serializer.validated_data)
+            data.update(form.cleaned_data)
             try:
                 user = User.objects.create_user(
                     username=data['username'],
@@ -78,26 +114,10 @@ class SignUpViewSet(viewsets.ViewSet):
                 if new_user is not None:
                     login(request, new_user)
                     request.session.pop('signup_data', None)
-                    return Response({'message': 'Signup complete, user logged in'}, status=status.HTTP_201_CREATED)
+                    return redirect('home')
             except Exception as e:
-                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class LoginView(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request):
-        form = LoginForm(data=request.data)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return Response({'message': 'User logged in'}, status=status.HTTP_200_OK)
-        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class LogoutView(APIView):
-    def post(self, request):
-        logout(request)
-        return Response({'message': 'User logged out'}, status=status.HTTP_200_OK)
+                form.add_error(None, str(e))
+        return render(request, 'signup4.html', {'form': form})
     
 class MyCalorieView(APIView):
     def get(self, request):
