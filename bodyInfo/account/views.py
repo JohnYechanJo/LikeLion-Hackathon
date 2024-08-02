@@ -110,6 +110,5 @@ def signup_step4(request):
         form = SignUpFormStep4(initial=initial_data)
     return render(request, 'signup4.html', {'form': form})
 
-
 def mycalorie(request):
     return render(request, 'mycalorie.html')
