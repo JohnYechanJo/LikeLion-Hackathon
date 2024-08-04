@@ -10,14 +10,17 @@ function MapContainer() {
   const mapContainer = useRef(null);
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
-  const [lastCenter, setLastCenter] = useState({ lat: 37.5665, lng: 126.9780 });
+  const [lastCenter, setLastCenter] = useState({ lat: 37.5665, lng: 126.9780 }); // 초기 지도 위치 : 서울
   const navigate = useNavigate();
+
+  //함수 세개 -> setMap, setMarkers, setLastCenter
 
   useEffect(() => {
     const kakaoMapScript = document.createElement('script');
     kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_MAPS_APPKEY}&libraries=services&autoload=false`;
-    kakaoMapScript.async = true;
-
+    kakaoMapScript.async = true; //비동기적 로드 
+    
+    //sdk 사용 가능성 체크
     kakaoMapScript.onload = () => {
       if (window.kakao && window.kakao.maps) {
         window.kakao.maps.load(() => {
@@ -29,6 +32,7 @@ function MapContainer() {
           const mapInstance = new window.kakao.maps.Map(mapContainer.current, options);
           setMap(mapInstance);
 
+          //현재위치
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
               const currentPosition = new window.kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -45,7 +49,8 @@ function MapContainer() {
     };
 
     document.head.appendChild(kakaoMapScript);
-
+    
+    //컴포넌트 언마운트시 실행
     return () => {
       document.head.removeChild(kakaoMapScript);
     };
@@ -53,7 +58,6 @@ function MapContainer() {
 
   const handleSearch = (keyword) => {
     if (!map) return;
-
     // 기존 마커 제거
     markers.forEach(marker => {
       if (marker && marker.setMap) {
@@ -73,7 +77,7 @@ function MapContainer() {
         }
       }, {
         location: map.getCenter(),
-        radius: 5000
+        radius: 5000 //5000미터 반경 내 검색
       });
     } else {
       console.error('Kakao Maps Services is not available');
@@ -82,6 +86,8 @@ function MapContainer() {
 
   const updateMarkers = (data) => {
     const bounds = new window.kakao.maps.LatLngBounds();
+    
+    //데이터가 있는 장소 마커 생성
     const newMarkers = data.map(place => {
       const markerPosition = new window.kakao.maps.LatLng(place.y, place.x);
       const marker = new window.kakao.maps.Marker({
@@ -89,35 +95,44 @@ function MapContainer() {
         map: map,
       });
 
+      //infowindow 창 생성
       const infoWindow = new window.kakao.maps.InfoWindow({
         content: `<div class="info-window">
                     <div class="title">${place.place_name}</div>
                     <div>${place.address_name}</div>
                   </div>`
       });
-
       window.kakao.maps.event.addListener(marker, 'click', () => {
+        newMarkers.forEach(m => m.infoWindow.close());
         infoWindow.open(map, marker);
       });
 
+      //마커 위치 bounds에 추가 + newMarkers 배열에 포함
       bounds.extend(markerPosition);
       return {
         marker,
+        infoWindow,
         name: place.place_name,
         address: place.address_name
       };
     });
 
+    //마커 상태 업데이트 + 지도 범위를 bounds로 설정
     setMarkers(newMarkers);
     map.setBounds(bounds);
+
+    //지도 클릭 시 모든 인포창 닫기 
+    window.kakao.maps.event.addListener(map, 'click', () => {
+      newMarkers.forEach(m => m.infoWindow.close());
+    });
 
     // 지도 중심 업데이트
     const center = map.getCenter();
     setLastCenter({ lat: center.getLat(), lng: center.getLng() });
   };
 
+   //마커의 이름과 주소 정보를 저장하여 전달
   const handleRecommendationClick = () => {
-    // 마커의 이름과 주소 정보를 저장하여 전달
     const markerData = markers.map(markerObj => ({
       name: markerObj.name,
       address: markerObj.address
@@ -151,7 +166,7 @@ function MapContainer() {
           리스트 목록
         </button>
         <button onClick={handleMapViewClick} className="back-to-main-button">
-          <FontAwesomeIcon icon={faArrowLeft} size="lg" /> {/* 아이콘만 표시 */}
+          <FontAwesomeIcon icon={faArrowLeft} size="lg" /> 
         </button>
       </div>
     </div>
