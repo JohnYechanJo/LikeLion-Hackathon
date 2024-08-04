@@ -13,8 +13,6 @@ function MapContainer() {
   const [lastCenter, setLastCenter] = useState({ lat: 37.5665, lng: 126.9780 }); // 초기 지도 위치 : 서울
   const navigate = useNavigate();
 
-  //함수 세개 -> setMap, setMarkers, setLastCenter
-
   useEffect(() => {
     const kakaoMapScript = document.createElement('script');
     kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_MAPS_APPKEY}&libraries=services&autoload=false`;
